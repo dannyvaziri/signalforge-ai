@@ -16,7 +16,7 @@ export async function GET(request) {
   url.searchParams.set('client_id', process.env.ALPACA_OAUTH_CLIENT_ID);
   url.searchParams.set('redirect_uri', callback);
   url.searchParams.set('state', state);
-  url.searchParams.set('scope', 'trading data');
+  url.searchParams.set('scope', 'account:write trading data');
   url.searchParams.set('env', 'paper');
 
   return redirect(url.toString(), [cookie(ALPACA_STATE_COOKIE, state, 600)]);
