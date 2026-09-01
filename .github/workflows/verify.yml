@@ -18,3 +18,35 @@ jobs:
       - run: npm install
       - run: npm test
       - run: npm run build
+      - name: Prepare Hostinger environment template
+        if: github.event_name == 'push'
+        run: |
+          cat > .env.production <<'EOF'
+          APP_URL=https://palegreen-gnu-726608.hostingersite.com
+          AUTH_SECRET=
+          GOOGLE_CLIENT_ID=
+          GOOGLE_CLIENT_SECRET=
+          ALPACA_OAUTH_CLIENT_ID=
+          ALPACA_OAUTH_CLIENT_SECRET=
+          PAPER_EXECUTION_ENABLED=false
+          AUTO_EXECUTION_ENABLED=false
+          TRADING_KILL_SWITCH=false
+          ALPACA_API_KEY=
+          ALPACA_API_SECRET=
+          OPENAI_API_KEY=
+          OPENAI_MODEL=gpt-5.4-mini
+          EOF
+      - name: Package Hostinger upload
+        if: github.event_name == 'push'
+        run: |
+          zip -r signalforge.zip . \
+            -x '.git/*' '.github/*' 'node_modules/*' '.next/*' \
+               '.env' '.env.local' '.env.*.local' 'npm-debug.log*' '.DS_Store'
+      - name: Upload Hostinger package
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: signalforge-hostinger
+          path: signalforge.zip
+          if-no-files-found: error
+          retention-days: 7
