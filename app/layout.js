@@ -1,4 +1,5 @@
 import './globals.css';
+import './onboarding.css';
 
 export const metadata = {
   title: 'SignalForge AI',
